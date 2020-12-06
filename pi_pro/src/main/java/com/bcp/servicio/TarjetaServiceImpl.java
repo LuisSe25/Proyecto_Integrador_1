@@ -30,9 +30,9 @@ public class TarjetaServiceImpl implements TarjetaService{
 
 	@Override
 	public void actualizaestadoInactivo(int idCliente) {
-		repository.actualizaestadoInactivo(idCliente);
-		
+	repository.actualizaestadoInactivo(idCliente);
 	}
+
 
 
 

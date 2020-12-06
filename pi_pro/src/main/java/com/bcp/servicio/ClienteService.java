@@ -17,4 +17,5 @@ public interface ClienteService {
 	public abstract List<Cliente> listarTodos();
 
 	public abstract List<Cliente> listarPorNombre(String filtro);
+	public abstract Cliente listaPorId(int idCliente);
 }

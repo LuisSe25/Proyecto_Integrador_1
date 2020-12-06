@@ -1,6 +1,8 @@
 package com.bcp.controller;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,14 +10,30 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bcp.entidad.Cliente;
+import com.bcp.entidad.Cuenta;
+import com.bcp.entidad.HistorialCuenta;
+import com.bcp.entidad.HistorialNotificaciones;
+import com.bcp.entidad.Mensaje;
 import com.bcp.entidad.Opcion;
 import com.bcp.entidad.Rol;
 import com.bcp.entidad.Tarjeta;
+import com.bcp.entidad.TipoMovimiento;
+import com.bcp.entidad.Tranferencia;
 import com.bcp.servicio.ClienteService;
+import com.bcp.servicio.CuentaService;
+import com.bcp.servicio.HistorialNotificacionesService;
+import com.bcp.servicio.MensajeService;
 import com.bcp.servicio.TarjetaService;
+import com.bcp.util.Constantes;
 
 @Controller
 public class LoginController {
@@ -24,6 +42,13 @@ public class LoginController {
 	private ClienteService servicio;
 	@Autowired
 	private TarjetaService servicioTarjeta;
+	@Autowired
+	private MensajeService mensajeService;
+	@Autowired
+	private CuentaService cuentaService;
+	@Autowired
+	private HistorialNotificacionesService historialNotificacionesService;
+	
 
 	@RequestMapping("/")
 	public String ver() {
@@ -67,12 +92,34 @@ public class LoginController {
 		}
 	}
 	
+	@RequestMapping("/mensaje")
+	public String regMensaje(Mensaje x, int idCliente,HttpSession session) {
+		//Cliente objCliente = (Cliente) session.getAttribute("objCliente");
+		TipoMovimiento objTipoMov02 = new TipoMovimiento();
+		objTipoMov02.setIdTipoMovimiento(Constantes.ADMINISTRADOR);	
+
+		Mensaje objMensaje2 = mensajeService.listaMensajePorTipo(Constantes.ADMINISTRADOR);
+		Cliente objCliente = servicio.listaPorId(idCliente);
+		String texto2 = objMensaje2.getTexto();
+		texto2 = texto2.replaceFirst("p4", String.valueOf(x.getTexto()));
+	
+		HistorialNotificaciones obj4 = new HistorialNotificaciones();
+		obj4.setMensaje(texto2);
+		obj4.setEstado("NO VISTO");
+		obj4.setCliente(objCliente);
+		
+		historialNotificacionesService.registraHistorial(obj4);
+        return "intranetHomeAdmin";
+}
+
 	@RequestMapping("/consultaCrudUsuario")
-	public String lista(String filtro, HttpSession session) {
+	public String lista(String filtro,String idCliente, HttpSession session)  {
 		List<Cliente> lista = servicio.listarPorNombre(filtro + "%");
 		session.setAttribute("usuarios", lista);
+		
 		return "intranetHomeAdmin";
 	}
+
 
 	@RequestMapping("/salidaUsuario")
 	public String listTodos(HttpSession session) {

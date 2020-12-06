@@ -51,11 +51,11 @@ public class ConfiguraciónController {
 		Cliente objCLiente= 	(Cliente)	session.getAttribute("objCliente");
 		if(objTarjeta.getIdestado()==1) {
 			tarjetaService.actualizaestadoInactivo(objCLiente.getIdCliente());
-			session.setAttribute("MENSAJES", "tarjeta lista ");
+			session.setAttribute("MENSAJE", "Tarjeta Inactiva");
 		}
 		else {
 			tarjetaService.actualizaestadoActivo(objCLiente.getIdCliente());
-			session.setAttribute("MENSAJES", "tarjeta lista gaaa");
+			session.setAttribute("MENSAJE", "Tarjeta Activa");
 		}
 		return "configuracionTarjeta";
 	}

@@ -12,18 +12,15 @@
   <title>BCP - Cibertec</title>
 
   <!-- Custom fonts for this template-->
-       <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
- 
-
 
 </head>
 
-<body id="page-top" onload="cargarEstado()">
+<body id="page-top">
 
   <!-- Page Wrapper -->
   <div id="wrapper">
@@ -68,19 +65,15 @@
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Transferencias</span></a>
       </li>
-
+       <li class="nav-item">
+        <a class="nav-link" href="/verConfiguracion">
+          <i class="fas fa-fw fa-chart-area"></i>
+          <span>Configuración</span></a>
+      </li>
       <!-- Nav Item - Tables -->
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
-            <div class="sidebar-heading">
-        Tarjeta
-      </div>
-            <li class="nav-item">
-        <a class="nav-link" href="/verConfiguracionTarjeta">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Configuracion de Tarjeta</span></a>
-      </li>
 
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">
@@ -142,7 +135,8 @@
                 <h6 class="dropdown-header">
                   Notificaciones
                 </h6>
-    <div class="dropdown-item d-flex align-items-center overflow-auto" href="#">
+    
+                   <div class="dropdown-item d-flex align-items-center  overflow-auto" href="#">
                 
       
         
@@ -152,6 +146,7 @@
                   </div>
              
                </div>
+               
      
                 <a class="dropdown-item text-center small text-gray-500" href="#">Mostrar todas las notificaciones</a>
               </div>
@@ -186,12 +181,16 @@
 
         </nav>
         <!-- End of Topbar -->
-
+        
+        
+        
+        
+        
         <!-- Begin Page Content -->
         <div class="container-fluid">
-<h4>Configuracion de Tarjeta</h4>
-<form action="configuracionTarjeta" id="id_form" method="post"> 
-		       <div class="col-md-4">
+		<h4>Tranferencia BCP</h4>
+<form action="tranferencia" id="id_form" method="post"> 
+			<div class="col-md-4">
 							<c:if test="${sessionScope.MENSAJE != null }">
 									<div class="alert alert-success" id="success-alert">
 							 		   <button type="button" class="close" data-dismiss="alert">x</button>
@@ -201,39 +200,30 @@
 							<c:remove var="MENSAJE"/>
 						</div>
 			<div class="form-group">
-				<label class="control-label" for="id_cuenta_ori">Tarjeta</label>
-				<input type="text" id="disabledTextInput" class="form-control" placeholder="${sessionScope.objTarjeta.idTarjeta}" disabled>
+				<label class="control-label" for="id_cuenta_ori">Cuenta Origen</label>
+				<select id="id_cuenta_ori" name="cuentaOrigen" class='form-control'>
+					<option value=" ">[Seleccione]</option>    
+				</select>
 		    </div>
 		    
 			<div class="form-group">
-				<label class="control-label" for="id_monto">Propietario</label>
-				<input type="text" id="disabledTextInput" class="form-control" placeholder="${sessionScope.objCliente.nombre}  ${sessionScope.objCliente.apellido}" disabled>
+				<label class="control-label" for="id_monto">Monto</label>
+				<input class="form-control" type="text" id="id_monto" name="monto" placeholder="Ingrese el codigo">
 			</div>
 			
-    	<div class="form-group">
-				<label class="control-label" for="id_monto">Fecha de Vencimiento</label>
-				<input type="text" id="disabledTextInput" class="form-control" placeholder="${sessionScope.objTarjeta.fechaVencimiento}"   disabled> 
+			<div class="form-group">
+				<label class="control-label" for="id_cuenta_des">Cuenta Destino</label>
+				<input class="form-control" type="text" id="id_cuenta_des" name="cuentaDestino" placeholder="Ingrese el nombre">
+				
 			</div>
-    
-    	<div class="form-group">
-				<label class="control-label" for="id_monto">Fecha de Activación</label>
-				<input type="text" id="disabledTextInput" class="form-control" placeholder="${sessionScope.objTarjeta.fechaActivacion}" disabled>
-			</div>
-       	<div class="form-group">
-				<label class="control-label" for="id_monto">Bloquear Tarjeta</label>
-						<input id="toggle-two" type="checkbox" data-toggle="toggle" data-on="Activo" data-off="Inactivo">		
-</div>
-	
 			
 		    
-     <hr>
 			<div class="form-group">
-				<button type="submit" class="btn btn-primary" >Guardar</button>
+				<button type="submit" class="btn btn-primary" >Transferir</button>
 			</div>
 	
 
 	</form>
-
 
         </div>
         <!-- /.container-fluid -->
@@ -302,81 +292,85 @@
 
 </body>
 <script>
-function cargarEstado(){
-	if(${sessionScope.objTarjeta.idestado} == 2){
-        $('#toggle-two').bootstrapToggle('off')
-	}
-else{
-       
-        $('#toggle-two').bootstrapToggle('on')
-	}
+function cargarCliente("#id_cuenta_des"){
+	
+	
 }
 </script>
-
 <script>
 	
 
-$(document).ready(function () {
-	
+	$(document).ready(function () {
 
-
+		var contador = 0;
 		
-	var contador = 0;
-	
-	$.getJSON("cargaNotificaciones", {}, function(data){
-		$.each(data, function(index,item){
+    	$.getJSON("cargaNotificaciones", {}, function(data){
+    		$.each(data, function(index,item){
+  
 
-
-			 contador+=1;
-		
+   			 contador+=1;
 			
-			 $("#idNotificaciones").append("<h8>"+ item.mensaje +"</h8>");
-			 $("#idNotificaciones").append("<hr>");
-		});
+   			
+   			 $("#idNotificaciones").append("<h8>"+ item.mensaje +"</h8>");
+   			 $("#idNotificaciones").append("<hr>");
+    		});
 
-		 $('#noti_Counter')
-         .css({ opacity: 0 })
-         .text(contador)  // AÑADIR VALOR DINÁMICO (PUEDE EXTRAER DATOS DE LA BASE DE DATOS O XML).
-         .css({ top: '14px' })
-         .animate({ right: '0px', opacity: 1 }, 500);
-         
-	});
-	
+    		 $('#noti_Counter')
+             .css({ opacity: 0 })
+             .text(contador)  // AÑADIR VALOR DINÁMICO (PUEDE EXTRAER DATOS DE LA BASE DE DATOS O XML).
+             .css({ top: '14px' })
+             .animate({ right: '0px', opacity: 1 }, 500);
+             
+    	});
+    	
 
-	// MOSTRAR ANIMADO EL CONTADOR DE NOTIFICACIONES
-   
+    	// MOSTRAR ANIMADO EL CONTADOR DE NOTIFICACIONES
+       
 
-    $('#noti_Button').click(function () {
+        $('#noti_Button').click(function () {
 
-        // TOGGLE (MOSTRAR U OCULTAR) VENTANA DE NOTIFICACIONES.
-        $('#notifications').fadeToggle('fast', 'linear', function () {
-            if ($('#notifications').is(':hidden')) {
-                $('#noti_Button').css('background-color');
-            }
-            // // CAMBIAR EL COLOR DE FONDO DEL BOTÓN. 
-            else $('#noti_Button').css('background-color');
+            // TOGGLE (MOSTRAR U OCULTAR) VENTANA DE NOTIFICACIONES.
+            $('#notifications').fadeToggle('fast', 'linear', function () {
+                if ($('#notifications').is(':hidden')) {
+                    $('#noti_Button').css('background-color');
+                }
+                // // CAMBIAR EL COLOR DE FONDO DEL BOTÓN. 
+                else $('#noti_Button').css('background-color');
+            });
+
+            $('#noti_Counter').fadeOut('slow');     // OCULTAR EL MOSTRADOR.
+
+            return false;
         });
 
-        $('#noti_Counter').fadeOut('slow');     // OCULTAR EL MOSTRADOR.
+        // OCULTAR NOTIFICACIONES CUANDO SE HAGA CLIC EN CUALQUIER LUGAR DE LA PÁGINA. 
+        $(document).click(function () {
+            $('#notifications').hide();
 
-        return false;
+           // COMPRUEBE SI EL CONTADOR DE NOTIFICACIONES ESTÁ OCULTO.
+            if ($('#noti_Counter').is(':hidden')) {
+                // // CAMBIAR EL COLOR DE FONDO DEL BOTÓN.
+                $('#noti_Button').css('background-color');
+            }
+        });
+
+        $('#notifications').click(function () {
+            return false;       // NO HACER NADA CUANDO SE HAGA CLIC EN EL CONTENEDOR
+        });
     });
-
-    // OCULTAR NOTIFICACIONES CUANDO SE HAGA CLIC EN CUALQUIER LUGAR DE LA PÁGINA. 
-    $(document).click(function () {
-        $('#notifications').hide();
-
-       // COMPRUEBE SI EL CONTADOR DE NOTIFICACIONES ESTÁ OCULTO.
-        if ($('#noti_Counter').is(':hidden')) {
-            // // CAMBIAR EL COLOR DE FONDO DEL BOTÓN.
-            $('#noti_Button').css('background-color');
-        }
-    });
-
-    $('#notifications').click(function () {
-        return false;       // NO HACER NADA CUANDO SE HAGA CLIC EN EL CONTENEDOR
-    });
-});
     </script>
-  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+ <script type="text/javascript">
+$.getJSON("cargaCuenta", {}, function(data){
+	$.each(data, function(index,item){
+		$("#id_cuenta_ori").append("<option value="+item.numero +">"+ item.numero +"</option>");
+	});
+});
+</script>
+ <script type="text/javascript">
+$.getJSON("cargaNombreCuenta", {}, function(data){
+	$.each(data, function(index,item){
+		$("#id_cuenta_des_cli").append("<option value="+item.nombre +">"+ item.nombre +"</option>");
+	});
+});
+</script>
 </html>

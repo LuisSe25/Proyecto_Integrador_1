@@ -42,4 +42,9 @@ public class ClienteServiceImpl implements ClienteService {
 	return repository.listaPorNombre(filtro);
 	}
 
+	@Override
+	public Cliente listaPorId(int idCliente) {
+		return repository.listaPorId(idCliente);
+	}
+
 }
